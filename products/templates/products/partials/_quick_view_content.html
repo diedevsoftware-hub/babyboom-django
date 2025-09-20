@@ -1,0 +1,37 @@
+<!-- templates/products/partials/_quick_view_content.html -->
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'products/css/product_detail.css' %}">
+<div class="quick-view-layout">
+    <div class="quick-view-gallery">
+        <div class="quick-view-main-image-wrapper">
+            <img src="" alt="{{ product.name }}" id="main-product-image-modal">
+        </div>
+        <div class="quick-view-thumbnail-gallery" id="thumbnail-gallery-modal"></div>
+    </div>
+    <div class="quick-view-info">
+        {% csrf_token %}
+        {% if product.brand %}<span class="product-brand">{{ product.brand.name|upper }}</span>{% endif %}
+        <h2 class="product-title-modal">{{ product.name }}</h2>
+        
+        <div class="product-price-section" id="product-price-modal"></div>
+        <p class="product-stock" id="product-stock-modal"></p>
+
+        <div class="variant-selector">
+            <label>Color:</label>
+            <div class="color-swatches" id="color-swatches-modal"></div>
+        </div>
+
+        <div class="purchase-actions">
+            <div class="quantity-control">
+                <button class="quantity-btn decrease" aria-label="Disminuir cantidad">-</button>
+                <input type="number" value="1" min="1" id="quantity-input-modal" class="quantity-input" aria-label="Cantidad">
+                <button class="quantity-btn increase" aria-label="Aumentar cantidad">+</button>
+            </div>
+            <button id="add-to-cart-btn-modal" class="add-to-cart-button">Agregar al Carrito</button>
+        </div>
+        <a href="{{ product.get_absolute_url }}" class="view-full-details">Ver página completa del producto &rarr;</a>
+    </div>
+</div>
+<!-- CORRECCIÓN CLAVE: El ID del script debe ser único -->
+{{ variants_json|json_script:"variants-data-modal" }}

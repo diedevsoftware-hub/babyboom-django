@@ -1,0 +1,55 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Resultados para "{{ query }}" - BabyBoom{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'products/css/products.css' %}">
+{% endblock styles %}
+
+{% block content %}
+<div class="container">
+    {% if query %}
+        <h1 class="page-title">Resultados para "{{ query }}"</h1>
+    {% else %}
+        <h1 class="page-title">Realiza una búsqueda</h1>
+    {% endif %}
+
+    <div class="product-grid">
+        {% csrf_token %} <!-- SELLO DE SEGURIDAD -->
+        {% for product in products %}
+            <div class="product-card" data-product-id="{{ product.id }}" data-aos="fade-up">
+                {% with first_variant=product.variants.first %}
+                <div class="product-card-image-wrapper">
+                    <a href="{% url 'products:product_detail' product.slug %}">
+                        <img src="{% if first_variant.images.first %}{{ first_variant.images.first.image.url }}{% endif %}" alt="{{ product.name }}" class="product-card-image">
+                    </a>
+                    <button class="card-carousel-arrow prev" data-direction="-1" aria-label="Anterior">&#10094;</button>
+                    <button class="card-carousel-arrow next" data-direction="1" aria-label="Siguiente">&#10095;</button>
+                    {% if first_variant.discount_percentage %}
+                        <div class="product-tag sale-tag">-{{ first_variant.discount_percentage }}%</div>
+                    {% endif %}
+                    <div class="product-card-actions">
+                        <button class="action-btn quick-view-btn" data-product-id="{{ product.id }}" title="Vista Rápida">👁️</button>
+                        <button class="action-btn add-to-cart-card-btn" title="Agregar al Carrito">🛒</button>
+                        <a href="{% url 'products:product_detail' product.slug %}" class="action-btn view-details-btn" title="Ver Detalles Completos">+</a>
+                    </div>
+                </div>
+                <div class="product-card-content">
+                    {% if product.brand %}<span class="product-card-brand">{{ product.brand.name|upper }}</span>{% endif %}
+                    <h3 class="product-card-title"><a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a></h3>
+                    <div class="card-swatches"></div>
+                    <div class="product-card-price"></div>
+                </div>
+                {% endwith %}
+            </div>
+        {% empty %}
+            {% if query %}<p>No se encontraron productos que coincidan con tu búsqueda.</p>{% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% if products %}
+    <script id="all-variants-data" type="application/json">{{ all_variants_json|safe }}</script>
+{% endif %}
+{% endblock %}

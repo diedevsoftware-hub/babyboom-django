@@ -1,0 +1,25 @@
+# Archivos de entorno virtual
+venv/
+
+# Base de datos de SQLite
+db.sqlite3
+
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+
+# Archivos de configuración del editor
+.vscode/
+.idea/
+
+# Archivos estáticos y de medios generados
+# No subimos los archivos que el usuario carga (media)
+# ni los que Django junta para producción (staticfiles)
+media/
+staticfiles/
+
+# Otros archivos que no deben estar en el repositorio
+*.log
+*.pot
+*.swp
+local_settings.py

@@ -1,0 +1,322 @@
+/* --- Contenido de /components/_product-card.css --- */
+.product-card {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+.product-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1.25;
+    overflow: hidden;
+    background-color: var(--color-background-light);
+}
+.product-card-image-wrapper > a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.4s ease;
+}
+.product-card:hover .product-card-image-wrapper > a {
+    transform: scale(1.05);
+}
+.product-card-image {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+}
+.card-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    font-size: 16px;
+    z-index: 5;
+    display: none;
+}
+.card-carousel-arrow.prev { left: 10px; }
+.card-carousel-arrow.next { right: 10px; }
+.product-card:hover .card-carousel-arrow {
+    opacity: 1;
+    visibility: visible;
+}
+.product-card-actions {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 6;
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    transition: all 0.3s ease;
+}
+.product-card:hover .product-card-actions {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+.action-btn {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+    color: var(--color-text-dark);
+    text-decoration: none;
+}
+.action-btn:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text-dark);
+    transform: scale(1.1);
+}
+.product-card-content {
+    padding: 1rem;
+    text-align: left;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.product-card-brand {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+.product-card-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem 0;
+    flex-grow: 1;
+}
+.product-card-title a {
+    color: var(--color-text-dark);
+    text-decoration: none;
+}
+.card-swatches {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1rem;
+    height: 22px;
+}
+.card-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.card-swatch.active {
+    outline: 2px solid var(--color-text-dark);
+    outline-offset: 1px;
+}
+.product-card-price {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    min-height: 24px;
+}
+.product-card-price .sale-price { color: var(--color-sale); }
+.product-card-price .original-price {
+    text-decoration: line-through;
+    color: var(--color-text-secondary);
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: normal;
+}
+.product-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--color-white);
+    border-radius: 4px;
+    z-index: 10;
+}
+.sale-tag {
+    background-color: var(--color-sale);
+}
+
+/* --- ESTILOS PARA EL MODAL DE VISTA RÁPIDA --- */
+
+/* --- Contenedor de la Imagen Principal --- */
+.quick-view-main-image-wrapper {
+    width: 100%; /* Ocupa todo el ancho de su columna en el grid */
+    
+    /* LA MAGIA ESTÁ AQUÍ: Forzamos una proporción cuadrada */
+    aspect-ratio: 1 / 1; 
+    
+    /* Esto es para centrar la imagen si es más pequeña que el contenedor */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Crucial: si la imagen aún así intenta salirse, la cortamos */
+    overflow: hidden; 
+    
+    border-radius: 8px; /* Unos bordes redondeados para que se vea mejor */
+    background-color: var(--color-background-light); /* Un fondo por si la imagen tarda en cargar */
+    margin-bottom: 1rem; /* Espacio antes de las miniaturas */
+}
+
+/* --- La Imagen Principal DENTRO del Modal --- */
+#main-product-image-modal {
+    /* Clave: La imagen nunca será más ancha o alta que su contenedor */
+    max-width: 100%;
+    max-height: 100%;
+    
+    /* LA OTRA PARTE DE LA MAGIA:
+       'contain' asegura que toda la imagen se vea, sin estirarse ni cortarse.
+       Mantiene su proporción original, aunque deje espacios en blanco a los lados. */
+    object-fit: contain; 
+    
+    /* Para que se vea suave si cambiamos de imagen */
+    transition: transform 0.3s ease; 
+}
+
+/* --- Estilos para la galería de miniaturas (thumbnails) --- */
+.quick-view-thumbnail-gallery {
+    display: flex;
+    justify-content: center; /* Centramos las miniaturas */
+    gap: 0.75rem;
+    flex-wrap: wrap; /* Si hay muchas, pasarán a la siguiente línea */
+}
+@media (max-width: 768px) {
+    .product-card:hover .product-card-actions {
+        opacity: 1;
+    }
+    .product-card-actions {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* --- Contenido de /components/_sidebar.css --- */
+.filter-sidebar {
+    background-color: var(--color-white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+    border: 1px solid var(--color-border);
+}
+.filter-sidebar h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 1.2rem;
+}
+.filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.filter-list li {
+    margin-bottom: 0.5rem;
+}
+.filter-list a {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+}
+.filter-list a:hover {
+    background-color: var(--color-border);
+    color: var(--color-text-dark);
+    transform: translateX(5px);
+}
+.filter-list a.active-filter {
+    font-weight: bold;
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    pointer-events: none; 
+}
+@media (max-width: 768px) {
+    .filter-sidebar {
+        position: static;
+        margin-bottom: 2rem;
+    }
+}
+
+/* --- Contenido de /layout/_grid.css (SOLO PARTE DE PRODUCTOS) --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+.category-layout { 
+    display: grid; 
+    grid-template-columns: 250px 1fr; 
+    gap: 2rem; 
+}
+@media (max-width: 768px) {
+    .category-layout { grid-template-columns: 1fr; }
+}
+
+.pagination { 
+    display: flex; 
+    justify-content: center; 
+    margin-top: 2rem; 
+}
+.pagination-list { 
+    display: flex; 
+    list-style: none; 
+    padding: 0; 
+}
+.page-item { margin: 0 5px; }
+.page-link { 
+    display: block; 
+    padding: 8px 12px; 
+    border: 1px solid var(--color-border);
+    color: var(--color-text-dark);
+    text-decoration: none; 
+    border-radius: 4px; 
+}
+.page-link:hover { 
+    background-color: var(--color-border); 
+}
+.page-item.active .page-link {
+    background-color: var(--color-primary);
+    color: var(--color-text-dark);
+    border-color: var(--color-primary);
+}
+.page-item.disabled .page-link { 
+    color: var(--color-text-secondary);
+    background-color: var(--color-border);
+    cursor: not-allowed; 
+}

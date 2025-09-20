@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block body_class %}is-homepage{% endblock %} 
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'core/css/home.css' %}">
+{% endblock styles %}
+
+{% block content %}
+    <!-- RF1.1: Video Principal (Hero) -->
+    <section class="hero-section">
+        <div class="video-background">
+            <video autoplay loop muted playsinline>
+                <source src="{% static 'core/videos/portada-babyboom.mp4' %}" type="video/mp4">
+                Tu navegador no soporta videos HTML5.
+            </video>
+
+            <div class="video-overlay"></div> 
+        </div>
+        <!-- Este div es para el degradado -->
+        <div class="video-overlay-gradient"></div>
+    </section>
+
+    <!-- RF1.3: Cartas de Categorías Principales -->
+    <section class="categories">
+        <h2>Nuestras Categorías</h2>
+        
+        <div class="category-cards-container">
+            {% for category in main_categories %} <!-- Corregido a main_categories que viene del context processor -->
+                <!-- ===== LA CORRECCIÓN ESTÁ AQUÍ ===== -->
+                <a href="{% url 'products:category_detail' category.slug %}" class="category-card" data-aos="fade-up">
+                    {% if category.image %}
+                        <div class="category-card-image-wrapper">
+                            <img src="{{ category.image.url }}" alt="Imagen de {{ category.name }}">
+                        </div>
+                    {% endif %}
+                    <div class="category-card-content">
+                        <h3>{{ category.name }}</h3>
+                        <p>{{ category.description }}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

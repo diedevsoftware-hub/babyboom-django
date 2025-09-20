@@ -1,0 +1,117 @@
+
+{% extends "core/base.html" %}
+
+{% load static %}
+{% block title %}{{ category.name }} - BabyBoom{% endblock %}
+{% block meta_description %}{% if category.meta_description %}{{ category.meta_description }}{% endif %}{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'products/css/products.css' %}">
+{% endblock styles %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">{{ category.name }}</h1>
+    <p class="category-description">{{ category.description }}</p>
+
+    {% if is_parent_category %}
+        <div class="category-cards-container">
+            {% for subcat in subcategories %}
+            <a href="{{ subcat.get_absolute_url }}" class="category-card" data-aos="fade-up">
+                <div class="category-card-image-wrapper">
+                    {% if subcat.image %}
+                        <img src="{{ subcat.image.url }}" alt="Imagen de {{ subcat.name }}">
+                    {% else %}
+                        <!-- Opcional: Muestra una imagen por defecto si no hay una -->
+                        <img src="{% static 'images/placeholder.png' %}" alt="Imagen no disponible">
+                    {% endif %}
+                </div>
+                <div class="category-card-content">
+                    <h3>{{ subcat.name }}</h3>
+                    <p>{{ subcat.description }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="category-layout">
+            <aside class="filter-sidebar">
+                <h3>Filtrar por Marca</h3>
+                <ul class="filter-list">
+                    <li><a href="{% url 'products:category_detail' category.slug %}" class="{% if not selected_brand_id %}active-filter{% endif %}">Todas las marcas</a></li>
+                    {% for brand in brands %}
+                    <li><a href="?brand={{ brand.id }}" class="{% if selected_brand_id == brand.id|stringformat:'s' %}active-filter{% endif %}">{{ brand.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </aside>
+            <main class="product-area">
+                {% csrf_token %} <!-- SELLO DE SEGURIDAD -->
+                <div class="product-grid">
+                    {% for product in products %}
+                    <div class="product-card" data-product-id="{{ product.id }}" data-aos="fade-up">
+                        {% with first_variant=product.variants.first %}
+                        <div class="product-card-image-wrapper">
+                            <a href="{% url 'products:product_detail' product.slug %}">
+                                <img src="{% if first_variant.images.first %}{{ first_variant.images.first.image.url }}{% endif %}" alt="{{ product.name }}" class="product-card-image">
+                            </a>
+                            <button class="card-carousel-arrow prev" data-direction="-1" aria-label="Anterior">&#10094;</button>
+                            <button class="card-carousel-arrow next" data-direction="1" aria-label="Siguiente">&#10095;</button>
+                            {% if first_variant.discount_percentage %}
+                                <div class="product-tag sale-tag">-{{ first_variant.discount_percentage }}%</div>
+                            {% endif %}
+                            <div class="product-card-actions">
+                                <button class="action-btn quick-view-btn" data-product-id="{{ product.id }}" title="Vista Rápida">👁️</button>
+                                <button class="action-btn add-to-cart-card-btn" title="Agregar al Carrito">🛒</button>
+                                <a href="{% url 'products:product_detail' product.slug %}" class="action-btn view-details-btn" title="Ver Detalles Completos">+</a>
+                            </div>
+                        </div>
+                        <div class="product-card-content">
+                            {% if product.brand %}<span class="product-card-brand">{{ product.brand.name|upper }}</span>{% endif %}
+                            <h3 class="product-card-title"><a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a></h3>
+                            <div class="card-swatches"></div>
+                            <div class="product-card-price"></div>
+                        </div>
+                        {% endwith %}
+                    </div>
+                    {% empty %}
+                    <p>No hay productos que coincidan con los filtros seleccionados.</p>
+                    {% endfor %}
+                </div>
+                {% if products.has_other_pages %}
+                <div class="pagination">
+
+                    <ul class="pagination-list">
+                        {% if products.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ products.previous_page_number }}{% if selected_brand_id %}&brand={{ selected_brand_id }}{% endif %}">&laquo; Anterior</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo; Anterior</span></li>
+                        {% endif %}
+                        {% for i in products.paginator.page_range %}
+                            {% if products.number == i %}
+                            <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}{% if selected_brand_id %}&brand={{ selected_brand_id }}{% endif %}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if products.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ products.next_page_number }}{% if selected_brand_id %}&brand={{ selected_brand_id }}{% endif %}">Siguiente &raquo;</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">Siguiente &raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            </main> <!-- ===== ETIQUETA DE CIERRE CORREGIDA ===== -->
+        </div> <!-- ===== ETIQUETA DE CIERRE CORREGIDA ===== -->
+    {% endif %}
+
+    <!-- ===== SCRIPT MOVIDO A LA POSICIÓN CORRECTA ===== -->
+    {% if not is_parent_category %}
+    <script id="all-variants-data" type="application/json">{{ all_variants_json|safe }}</script>
+    {% endif %}
+</div>
+{% endblock %}
