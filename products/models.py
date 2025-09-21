@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
 
 
 # RF3.5: Permitirá filtrar por marca y mostrarla en el detalle (RF4.2)
@@ -19,7 +20,7 @@ class Brand(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name="Nombre")
     slug = models.SlugField(max_length=120, unique=True, blank=True, help_text="Dejar en blanco para autogenerar.")
-    image = models.ImageField(upload_to='categories/', blank=True, null=True, verbose_name="Imagen Representativa", help_text="Se recomienda una imagen de proporción cuadrada (ej. 400x400px) para una mejor visualización.")
+    image = CloudinaryField(blank=True, null=True, verbose_name="Imagen Representativa", help_text="Se recomienda una imagen de proporción cuadrada (ej. 400x400px) para una mejor visualización.")
     description = models.TextField(blank=True, verbose_name="Descripción Breve")
     meta_description = models.TextField(
         max_length=165, blank=True, verbose_name="Meta Descripción (para SEO)",
@@ -128,7 +129,7 @@ class ProductVariant(models.Model):
 # RF4.1: Galería de imágenes, vinculada directamente a cada variante.
 class ProductImage(models.Model):
     variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='images', verbose_name="Variante del Producto")
-    image = models.ImageField(upload_to='products/', verbose_name="Imagen", help_text="Se recomienda una imagen cuadrada (ej. 500x500px) para una mejor visualización en las tarjetas.")
+    image = CloudinaryField(verbose_name="Imagen", help_text="Se recomienda una imagen cuadrada (ej. 500x500px) para una mejor visualización en las tarjetas.")
 
     class Meta:
         verbose_name = "Imagen de Producto"

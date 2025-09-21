@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'products',
     'core',
     'cart',
+    'cloudinary_storage', # <--- AÑADE ESTA
+    'cloudinary',  
 ]
 
 MIDDLEWARE = [
@@ -113,3 +115,13 @@ if not DEBUG:
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CART_SESSION_ID = 'cart'
+
+# --- CONFIGURACIÓN DE CLOUDINARY ---
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+
+# Le decimos a Django que use Cloudinary para TODOS los archivos subidos.
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
